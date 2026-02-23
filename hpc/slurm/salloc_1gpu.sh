@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 set -euo pipefail
-salloc -p normal --gres=gpu:1 --cpus-per-task=4 -t 01:00:00
+salloc -p normal --gres=gpu:2 --cpus-per-task=12 -t 08:00:00

@@ -1,24 +1,40 @@
 #!/usr/bin/env bash
-set -
+set -euo pipefail
 
-SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"euo pipefail
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/common.sh"
 source "$SCRIPT_DIR/activate.sh"
 source "$SCRIPT_DIR/load_env.sh"
 
-# 預設輸出檔
-RUN_TAG="${RUN_TAG:-${EXP_NAME:-eval}}"
-OUT_DIR="$WORK_DIR/outputs/$RUN_TAG"
-mkdir -p "$OUT_DIR"
+# === 固定路徑 ===
+MODEL_PATH="/work/foobarbaz911/vlmr1/models/VLM-R1-Qwen2.5VL-3B-Math-0305"
+DRVD_ROOT="/work/foobarbaz911/vlmr1/datasets/DrVD-Bench-repo"
+OUT_ROOT="/work/foobarbaz911/vlmr1/outputs"
+LOG_ROOT="/work/foobarbaz911/vlmr1/logs"
 
-echo "[RUN] EXP_NAME=${EXP_NAME:-}"
-echo "[RUN] MODEL_ID=${MODEL_ID:-}"
-echo "[RUN] DATASET_ID=${DATASET_ID:-}"
-echo "[RUN] OUT_DIR=$OUT_DIR"
+mkdir -p "$OUT_ROOT"
+mkdir -p "$LOG_ROOT"
 
-# ====== 你之後會把這段改成 VLM-R1 真正的 eval 入口 ======
-# 先放一個 smoke 版本，確認環境OK
-python -c "import torch; print('torch', torch.__version__, 'cuda', torch.cuda.is_available())" | tee "$OUT_DIR/smoke.txt"
+echo "[RUN] JOBID=$SLURM_JOB_ID"
+echo "[RUN] MODEL_PATH=$MODEL_PATH"
+echo "[RUN] DRVD_ROOT=$DRVD_ROOT"
+echo "[RUN] OUT_ROOT=$OUT_ROOT"
 
-# TODO: 之後替換成類似
-# python src/eval/test_rec_r1.py --model_path ... --data_dir ... --output ...
+TASKS=("independent" "joint" "visual_evidence" "report_generation")
+
+for task in "${TASKS[@]}"; do
+    echo "======================================"
+    echo "[RUN] TASK=$task"
+    echo "======================================"
+
+    python drvd_local_eval.py \
+        --model "$MODEL_PATH" \
+        --drvd-root "$DRVD_ROOT" \
+        --out-dir "$OUT_ROOT" \
+        --tasks "$task" \
+        --model-tag qwen3b \
+        --save-raw
+
+done
+
+echo "[DONE] All tasks finished."
