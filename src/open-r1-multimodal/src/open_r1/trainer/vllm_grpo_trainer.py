@@ -459,7 +459,7 @@ class Qwen2VLGRPOVLLMTrainer(Trainer):
             self._signature_columns = ["prompt"]
 
     # We need a custom sampler that samples the same prompt multiple times
-    def _get_train_sampler(self):
+    def _get_train_sampler(self, train_dataset=None):
         return RepeatRandomSampler(self.train_dataset, self.num_generations)
 
     # Get the per-token log probabilities for the completions for the model and the reference model

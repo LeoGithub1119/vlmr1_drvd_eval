@@ -19,7 +19,7 @@ from datetime import datetime
 from dataclasses import dataclass, field
 from typing import Optional
 from babel.numbers import parse_decimal
-from utils.math import compute_score
+from .utils.math import compute_score
 from datasets import load_dataset, load_from_disk
 from transformers import Qwen2VLForConditionalGeneration
 
@@ -1053,6 +1053,11 @@ def main(script_args, training_args, model_args):
         min_pixels=script_args.min_pixels,
         max_anyres_num=script_args.max_anyres_num,
     )
+    print("ATTENTION IMPLEMENTATION:", trainer.model.config._attn_implementation)
+
+    trainable = sum(p.numel() for p in trainer.model.parameters() if p.requires_grad)
+    total = sum(p.numel() for p in trainer.model.parameters())
+    print("trainable/total:", trainable, "/", total)
 
     # Train and push the model to the Hub
     if list(pathlib.Path(training_args.output_dir).glob("checkpoint-*")):

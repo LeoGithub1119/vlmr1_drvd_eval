@@ -1,31 +1,46 @@
 
-# ----------------------- Fix the flash attention bug in the current version of transformers -----------------------
-from transformers.models.qwen2_5_vl.modeling_qwen2_5_vl import Qwen2_5_VLVisionFlashAttention2, apply_rotary_pos_emb_flashatt, flash_attn_varlen_func
+# ----------------------- Flash attention support -----------------------
+# Note: Modern transformers (4.45+) already include optimized flash attention
+# automatically when flash-attn library is installed. This patch is for legacy versions.
 import torch
 from typing import Tuple, Optional
-def qwen2_5vl_vision_flash_attn_forward(
-        self,
-        hidden_states: torch.Tensor,
-        cu_seqlens: torch.Tensor,
-        rotary_pos_emb: Optional[torch.Tensor] = None,
-        position_embeddings: Optional[Tuple[torch.Tensor, torch.Tensor]] = None,
-    ) -> torch.Tensor:
+from transformers.utils import logging
+
+logger = logging.get_logger(__name__)
+
+# Try to import legacy flash attention classes (for transformers < 4.45)
+try:
+    from transformers.models.qwen2_5_vl.modeling_qwen2_5_vl import (
+        Qwen2_5_VLVisionFlashAttention2,
+        apply_rotary_pos_emb_flashatt,
+        flash_attn_varlen_func,
+    )
+    LEGACY_FLASH_ATTN_AVAILABLE = True
+except ImportError:
+    LEGACY_FLASH_ATTN_AVAILABLE = False
+    logger.debug("Legacy flash attention not available - transformers likely >= 4.45")
+
+if LEGACY_FLASH_ATTN_AVAILABLE:
+    def qwen2_5vl_vision_flash_attn_forward(
+            self,
+            hidden_states: torch.Tensor,
+            cu_seqlens: torch.Tensor,
+            rotary_pos_emb: Optional[torch.Tensor] = None,
+            position_embeddings: Optional[Tuple[torch.Tensor, torch.Tensor]] = None,
+        ) -> torch.Tensor:
         seq_length = hidden_states.shape[0]
         q, k, v = self.qkv(hidden_states).reshape(seq_length, 3, self.num_heads, -1).permute(1, 0, 2, 3).unbind(0)
-        # print(111, 222, 333, 444, 555, 666, 777, 888, 999)
         if position_embeddings is None:
             logger.warning_once(
                 "The attention layers in this model are transitioning from computing the RoPE embeddings internally "
                 "through `rotary_pos_emb` (2D tensor of RoPE theta values), to using externally computed "
-                "`position_embeddings` (Tuple of tensors, containing cos and sin). In v4.54 `rotary_pos_emb` will be "
-                "removed and `position_embeddings` will be mandatory."
+                "`position_embeddings` (Tuple of tensors, containing cos and sin)."
             )
             emb = torch.cat((rotary_pos_emb, rotary_pos_emb), dim=-1)
             cos = emb.cos().float()
             sin = emb.sin().float()
         else:
             cos, sin = position_embeddings
-            # Add this
             cos = cos.to(torch.float)
             sin = sin.to(torch.float)
         q, k = apply_rotary_pos_emb_flashatt(q.unsqueeze(0), k.unsqueeze(0), cos, sin)
@@ -39,10 +54,12 @@ def qwen2_5vl_vision_flash_attn_forward(
         attn_output = self.proj(attn_output)
         return attn_output
 
-
-def monkey_patch_qwen2_5vl_flash_attn():
-    Qwen2_5_VLVisionFlashAttention2.forward = qwen2_5vl_vision_flash_attn_forward
-
+    def monkey_patch_qwen2_5vl_flash_attn():
+        Qwen2_5_VLVisionFlashAttention2.forward = qwen2_5vl_vision_flash_attn_forward
+else:
+    def monkey_patch_qwen2_5vl_flash_attn():
+        # Flash attention is already optimized in modern transformers
+        pass
 
 # ----------------------- Fix the process pending bug when using data mixture of image-text data and pure-text under deepseed zero3-----------------------
 from transformers.models.qwen2_5_vl.modeling_qwen2_5_vl import Qwen2_5_VLCausalLMOutputWithPast
