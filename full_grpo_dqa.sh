@@ -1,11 +1,11 @@
 #!/bin/bash
-#SBATCH -J grpo_qa_list
+#SBATCH -J grpo_domainqa_raw
 #SBATCH -p normal
 #SBATCH --gres=gpu:4
 #SBATCH --cpus-per-task=12
 #SBATCH -t 24:00:00
-#SBATCH -o /work/foobarbaz911/vlmr1/logs/grpo_qa_list_%j.out
-#SBATCH -e /work/foobarbaz911/vlmr1/logs/grpo_qa_list_%j.err
+#SBATCH -o /work/foobarbaz911/vlmr1/logs/grpo_domainqa_raw_%j.out
+#SBATCH -e /work/foobarbaz911/vlmr1/logs/grpo_domainqa_raw_%j.err
 #SBATCH --account=mst114553
 
 set -euo pipefail
@@ -14,10 +14,10 @@ WORK=/work/foobarbaz911/vlmr1
 REPO=/home/foobarbaz911/VLM-R1
 
 MODEL=${WORK}/models/Qwen3-VL-8B-Instruct
-DATA=${WORK}/datasets/grpo_qa_list.jsonl
-IMG_ROOT=${WORK}/datasets/IAD256
+DATA=${WORK}/datasets/domain_qa_goods_mcq_v7_grpo_length_normalized.jsonl
+IMG_ROOT=${WORK}/datasets/MMAD
 
-OUT=${WORK}/outputs/grpo_mc_list_${SLURM_JOB_ID}
+OUT=${WORK}/outputs/grpo_domainqa_raw_${SLURM_JOB_ID}
 
 mkdir -p ${WORK}/logs ${OUT} ${WORK}/hf_cache ${WORK}/xdg_cache ${WORK}/torch_cache
 
@@ -47,7 +47,6 @@ export CUDA_DEVICE_ORDER=PCI_BUS_ID
 export NCCL_DEBUG=INFO
 export NCCL_IB_DISABLE=1
 export NCCL_P2P_DISABLE=1
-
 export MASTER_PORT=$((12000 + RANDOM % 20000))
 
 echo "======================================"
@@ -60,6 +59,7 @@ echo "IMG_ROOT=${IMG_ROOT}"
 echo "OUT=${OUT}"
 echo "======================================"
 
+# domain_qa 是 MCQ，所以 reward 先用 accuracy+format（location 沒 label 的話容易全 0）
 deepspeed --num_gpus=4 --module open_r1.grpo_jsonl \
   --dataset_name "jsonl" \
   --data_file_paths "${DATA}" \
@@ -70,9 +70,9 @@ deepspeed --num_gpus=4 --module open_r1.grpo_jsonl \
   --do_eval false \
   --bf16 true \
   --tf32 true \
-  --per_device_train_batch_size 4 \
-  --gradient_accumulation_steps 1 \
-  --num_generations 2 \
+  --per_device_train_batch_size 2 \
+  --gradient_accumulation_steps 2 \
+  --num_generations 1 \
   --learning_rate 1e-5 \
   --max_steps 2000 \
   --logging_steps 20 \

@@ -1,0 +1,76 @@
+======================================
+JOB ID: 131489
+HOST: hgpn17
+Thu Mar  5 12:12:35 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 550.127.08             Driver Version: 550.127.08     CUDA Version: 12.4     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA H100 80GB HBM3          On  |   00000000:9D:00.0 Off |                    0 |
+| N/A   28C    P0             70W /  700W |       1MiB /  81559MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA H100 80GB HBM3          On  |   00000000:C3:00.0 Off |                    0 |
+| N/A   28C    P0             68W /  700W |       1MiB /  81559MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   2  NVIDIA H100 80GB HBM3          On  |   00000000:D1:00.0 Off |                    0 |
+| N/A   31C    P0             69W /  700W |       1MiB /  81559MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   3  NVIDIA H100 80GB HBM3          On  |   00000000:DF:00.0 Off |                    0 |
+| N/A   31C    P0             68W /  700W |       1MiB /  81559MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+                                                                                         
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI        PID   Type   Process name                              GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+torch 2.10.0+cu128 tf 4.57.3
+flash-attn 2.8.3
+DATA=/work/foobarbaz911/vlmr1/datasets/grpo_qa_list.jsonl
+IMG_ROOT=/work/foobarbaz911/vlmr1/datasets/MMAD
+OUT=/work/foobarbaz911/vlmr1/outputs/grpo_mc_list_131489
+======================================
+[2026-03-05 12:12:45,083] [INFO] [real_accelerator.py:219:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[2026-03-05 12:12:48,482] [WARNING] [runner.py:215:fetch_hostfile] Unable to find hostfile, will proceed with training with local resources only.
+Detected VISIBLE_DEVICES=0,1,2,3 but ignoring it because one or several of --include/--exclude/--num_gpus/--num_nodes cl args were used. If you want to use CUDA_VISIBLE_DEVICES don't pass any of these arguments to deepspeed.
+[2026-03-05 12:12:48,482] [INFO] [runner.py:607:main] cmd = /home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv/bin/python3 -u -m deepspeed.launcher.launch --world_info=eyJsb2NhbGhvc3QiOiBbMCwgMSwgMiwgM119 --master_addr=127.0.0.1 --master_port=29500 --module --enable_each_rank_log=None open_r1.grpo_jsonl --dataset_name jsonl --data_file_paths /work/foobarbaz911/vlmr1/datasets/grpo_qa_list.jsonl --image_folders /work/foobarbaz911/vlmr1/datasets/MMAD --model_name_or_path /work/foobarbaz911/vlmr1/models/Qwen3-VL-8B-Instruct --output_dir /work/foobarbaz911/vlmr1/outputs/grpo_mc_list_131489 --do_train true --do_eval false --bf16 true --tf32 true --per_device_train_batch_size 2 --gradient_accumulation_steps 2 --num_generations 1 --learning_rate 1e-5 --max_steps 2000 --logging_steps 20 --save_strategy steps --save_steps 200 --save_total_limit 3 --eval_strategy no --reward_funcs accuracy format location --gradient_checkpointing --attn_implementation flash_attention_2 --deepspeed /home/foobarbaz911/VLM-R1/ds_config_zero2.json --freeze_vision_modules true --max_pixels 262144 --use_peft true --lora_r 8 --lora_alpha 16 --lora_dropout 0.05 --lora_target_modules q_proj k_proj v_proj o_proj
+[2026-03-05 12:12:50,429] [INFO] [real_accelerator.py:219:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[2026-03-05 12:12:53,790] [INFO] [launch.py:139:main] 0 NCCL_IB_DISABLE=1
+[2026-03-05 12:12:53,790] [INFO] [launch.py:139:main] 0 NCCL_P2P_DISABLE=1
+[2026-03-05 12:12:53,790] [INFO] [launch.py:139:main] 0 NCCL_DEBUG=INFO
+[2026-03-05 12:12:53,790] [INFO] [launch.py:146:main] WORLD INFO DICT: {'localhost': [0, 1, 2, 3]}
+[2026-03-05 12:12:53,790] [INFO] [launch.py:152:main] nnodes=1, num_local_procs=4, node_rank=0
+[2026-03-05 12:12:53,790] [INFO] [launch.py:163:main] global_rank_mapping=defaultdict(<class 'list'>, {'localhost': [0, 1, 2, 3]})
+[2026-03-05 12:12:53,790] [INFO] [launch.py:164:main] dist_world_size=4
+[2026-03-05 12:12:53,790] [INFO] [launch.py:168:main] Setting CUDA_VISIBLE_DEVICES=0,1,2,3
+[2026-03-05 12:12:53,791] [INFO] [launch.py:256:main] process 3838899 spawned with command: ['/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv/bin/python3', '-u', '-m', 'open_r1.grpo_jsonl', '--local_rank=0', '--dataset_name', 'jsonl', '--data_file_paths', '/work/foobarbaz911/vlmr1/datasets/grpo_qa_list.jsonl', '--image_folders', '/work/foobarbaz911/vlmr1/datasets/MMAD', '--model_name_or_path', '/work/foobarbaz911/vlmr1/models/Qwen3-VL-8B-Instruct', '--output_dir', '/work/foobarbaz911/vlmr1/outputs/grpo_mc_list_131489', '--do_train', 'true', '--do_eval', 'false', '--bf16', 'true', '--tf32', 'true', '--per_device_train_batch_size', '2', '--gradient_accumulation_steps', '2', '--num_generations', '1', '--learning_rate', '1e-5', '--max_steps', '2000', '--logging_steps', '20', '--save_strategy', 'steps', '--save_steps', '200', '--save_total_limit', '3', '--eval_strategy', 'no', '--reward_funcs', 'accuracy', 'format', 'location', '--gradient_checkpointing', '--attn_implementation', 'flash_attention_2', '--deepspeed', '/home/foobarbaz911/VLM-R1/ds_config_zero2.json', '--freeze_vision_modules', 'true', '--max_pixels', '262144', '--use_peft', 'true', '--lora_r', '8', '--lora_alpha', '16', '--lora_dropout', '0.05', '--lora_target_modules', 'q_proj', 'k_proj', 'v_proj', 'o_proj']
+[2026-03-05 12:12:53,792] [INFO] [launch.py:256:main] process 3838900 spawned with command: ['/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv/bin/python3', '-u', '-m', 'open_r1.grpo_jsonl', '--local_rank=1', '--dataset_name', 'jsonl', '--data_file_paths', '/work/foobarbaz911/vlmr1/datasets/grpo_qa_list.jsonl', '--image_folders', '/work/foobarbaz911/vlmr1/datasets/MMAD', '--model_name_or_path', '/work/foobarbaz911/vlmr1/models/Qwen3-VL-8B-Instruct', '--output_dir', '/work/foobarbaz911/vlmr1/outputs/grpo_mc_list_131489', '--do_train', 'true', '--do_eval', 'false', '--bf16', 'true', '--tf32', 'true', '--per_device_train_batch_size', '2', '--gradient_accumulation_steps', '2', '--num_generations', '1', '--learning_rate', '1e-5', '--max_steps', '2000', '--logging_steps', '20', '--save_strategy', 'steps', '--save_steps', '200', '--save_total_limit', '3', '--eval_strategy', 'no', '--reward_funcs', 'accuracy', 'format', 'location', '--gradient_checkpointing', '--attn_implementation', 'flash_attention_2', '--deepspeed', '/home/foobarbaz911/VLM-R1/ds_config_zero2.json', '--freeze_vision_modules', 'true', '--max_pixels', '262144', '--use_peft', 'true', '--lora_r', '8', '--lora_alpha', '16', '--lora_dropout', '0.05', '--lora_target_modules', 'q_proj', 'k_proj', 'v_proj', 'o_proj']
+[2026-03-05 12:12:53,793] [INFO] [launch.py:256:main] process 3838903 spawned with command: ['/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv/bin/python3', '-u', '-m', 'open_r1.grpo_jsonl', '--local_rank=2', '--dataset_name', 'jsonl', '--data_file_paths', '/work/foobarbaz911/vlmr1/datasets/grpo_qa_list.jsonl', '--image_folders', '/work/foobarbaz911/vlmr1/datasets/MMAD', '--model_name_or_path', '/work/foobarbaz911/vlmr1/models/Qwen3-VL-8B-Instruct', '--output_dir', '/work/foobarbaz911/vlmr1/outputs/grpo_mc_list_131489', '--do_train', 'true', '--do_eval', 'false', '--bf16', 'true', '--tf32', 'true', '--per_device_train_batch_size', '2', '--gradient_accumulation_steps', '2', '--num_generations', '1', '--learning_rate', '1e-5', '--max_steps', '2000', '--logging_steps', '20', '--save_strategy', 'steps', '--save_steps', '200', '--save_total_limit', '3', '--eval_strategy', 'no', '--reward_funcs', 'accuracy', 'format', 'location', '--gradient_checkpointing', '--attn_implementation', 'flash_attention_2', '--deepspeed', '/home/foobarbaz911/VLM-R1/ds_config_zero2.json', '--freeze_vision_modules', 'true', '--max_pixels', '262144', '--use_peft', 'true', '--lora_r', '8', '--lora_alpha', '16', '--lora_dropout', '0.05', '--lora_target_modules', 'q_proj', 'k_proj', 'v_proj', 'o_proj']
+[2026-03-05 12:12:53,793] [INFO] [launch.py:256:main] process 3838904 spawned with command: ['/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv/bin/python3', '-u', '-m', 'open_r1.grpo_jsonl', '--local_rank=3', '--dataset_name', 'jsonl', '--data_file_paths', '/work/foobarbaz911/vlmr1/datasets/grpo_qa_list.jsonl', '--image_folders', '/work/foobarbaz911/vlmr1/datasets/MMAD', '--model_name_or_path', '/work/foobarbaz911/vlmr1/models/Qwen3-VL-8B-Instruct', '--output_dir', '/work/foobarbaz911/vlmr1/outputs/grpo_mc_list_131489', '--do_train', 'true', '--do_eval', 'false', '--bf16', 'true', '--tf32', 'true', '--per_device_train_batch_size', '2', '--gradient_accumulation_steps', '2', '--num_generations', '1', '--learning_rate', '1e-5', '--max_steps', '2000', '--logging_steps', '20', '--save_strategy', 'steps', '--save_steps', '200', '--save_total_limit', '3', '--eval_strategy', 'no', '--reward_funcs', 'accuracy', 'format', 'location', '--gradient_checkpointing', '--attn_implementation', 'flash_attention_2', '--deepspeed', '/home/foobarbaz911/VLM-R1/ds_config_zero2.json', '--freeze_vision_modules', 'true', '--max_pixels', '262144', '--use_peft', 'true', '--lora_r', '8', '--lora_alpha', '16', '--lora_dropout', '0.05', '--lora_target_modules', 'q_proj', 'k_proj', 'v_proj', 'o_proj']
+[2026-03-05 12:13:00,503] [INFO] [real_accelerator.py:219:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[2026-03-05 12:13:00,540] [INFO] [real_accelerator.py:219:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[2026-03-05 12:13:00,543] [INFO] [real_accelerator.py:219:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[2026-03-05 12:13:00,574] [INFO] [real_accelerator.py:219:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[2026-03-05 12:13:02,579] [INFO] [comm.py:652:init_distributed] cdb=None
+[2026-03-05 12:13:02,579] [INFO] [comm.py:683:init_distributed] Initializing TorchBackend in DeepSpeed with backend nccl
+[2026-03-05 12:13:02,596] [INFO] [comm.py:652:init_distributed] cdb=None
+[2026-03-05 12:13:02,597] [INFO] [comm.py:652:init_distributed] cdb=None
+[2026-03-05 12:13:02,597] [INFO] [comm.py:652:init_distributed] cdb=None
+using vlm module: Qwen2VLModule
+using vlm module: Qwen2VLModule
+using vlm module: Qwen2VLModule
+using vlm module: Qwen2VLModule
+[2026-03-05 12:13:05,794] [INFO] [launch.py:319:sigkill_handler] Killing subprocess 3838899
+[2026-03-05 12:13:05,815] [INFO] [launch.py:319:sigkill_handler] Killing subprocess 3838900
+[2026-03-05 12:13:05,831] [INFO] [launch.py:319:sigkill_handler] Killing subprocess 3838903
+[2026-03-05 12:13:05,832] [INFO] [launch.py:319:sigkill_handler] Killing subprocess 3838904
+[2026-03-05 12:13:05,846] [ERROR] [launch.py:325:sigkill_handler] ['/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv/bin/python3', '-u', '-m', 'open_r1.grpo_jsonl', '--local_rank=3', '--dataset_name', 'jsonl', '--data_file_paths', '/work/foobarbaz911/vlmr1/datasets/grpo_qa_list.jsonl', '--image_folders', '/work/foobarbaz911/vlmr1/datasets/MMAD', '--model_name_or_path', '/work/foobarbaz911/vlmr1/models/Qwen3-VL-8B-Instruct', '--output_dir', '/work/foobarbaz911/vlmr1/outputs/grpo_mc_list_131489', '--do_train', 'true', '--do_eval', 'false', '--bf16', 'true', '--tf32', 'true', '--per_device_train_batch_size', '2', '--gradient_accumulation_steps', '2', '--num_generations', '1', '--learning_rate', '1e-5', '--max_steps', '2000', '--logging_steps', '20', '--save_strategy', 'steps', '--save_steps', '200', '--save_total_limit', '3', '--eval_strategy', 'no', '--reward_funcs', 'accuracy', 'format', 'location', '--gradient_checkpointing', '--attn_implementation', 'flash_attention_2', '--deepspeed', '/home/foobarbaz911/VLM-R1/ds_config_zero2.json', '--freeze_vision_modules', 'true', '--max_pixels', '262144', '--use_peft', 'true', '--lora_r', '8', '--lora_alpha', '16', '--lora_dropout', '0.05', '--lora_target_modules', 'q_proj', 'k_proj', 'v_proj', 'o_proj'] exits with return code = 1
