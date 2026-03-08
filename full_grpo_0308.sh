@@ -4,8 +4,8 @@
 #SBATCH --gres=gpu:4
 #SBATCH --cpus-per-task=12
 #SBATCH -t 24:00:00
-#SBATCH -o /home/foobarbaz911/VLM-R1/temp/grpo_qa_list_%j.out
-#SBATCH -e /home/foobarbaz911/VLM-R1/temp/grpo_qa_list_%j.err
+#SBATCH -o /work/foobarbaz911/vlmr1/logs/grpo_qa_list_%j.out
+#SBATCH -e /work/foobarbaz911/vlmr1/logs/grpo_qa_list_%j.err
 #SBATCH --account=mst114553
 
 set -euo pipefail
@@ -16,17 +16,12 @@ PKG_ROOT=/home/foobarbaz911/VLM-R1/src/open-r1-multimodal
 VENV=${PKG_ROOT}/.venv310_cu124
 
 MODEL=${WORK}/models/Qwen3-VL-8B-Instruct
-DATA=${WORK}/datasets/grpo_qa_list_fixed.jsonl
+DATA=${WORK}/datasets/grpo_qa_list.jsonl
 IMG_ROOT=${WORK}/datasets/IAD256
 
 OUT=/home/foobarbaz911/VLM-R1/temp/grpo_qa_list_${SLURM_JOB_ID}
-# OUT=/work/foobarbaz911/vlmr1/outputs/grpo_${SLURM_JOB_ID}
-mkdir -p \
-  /home/foobarbaz911/VLM-R1/temp \
-  "${OUT}" \
-  "${WORK}/hf_cache" \
-  "${WORK}/xdg_cache" \
-  "${WORK}/torch_cache"
+
+mkdir -p "${WORK}/logs" "${OUT}" "${WORK}/hf_cache" "${WORK}/xdg_cache" "${WORK}/torch_cache"
 
 ########################################
 # Toolchain
@@ -49,10 +44,10 @@ cd "${REPO}"
 ########################################
 # Runtime env
 ########################################
-export HF_HOME="${WORK}/hf_cache"
-export XDG_CACHE_HOME="${WORK}/xdg_cache"
-export TORCH_HOME="${WORK}/torch_cache"
-export TRANSFORMERS_CACHE="${WORK}/hf_cache"
+export HF_HOME=${WORK}/hf_cache
+export XDG_CACHE_HOME=${WORK}/xdg_cache
+export TORCH_HOME=${WORK}/torch_cache
+export TRANSFORMERS_CACHE=${WORK}/hf_cache
 export TOKENIZERS_PARALLELISM=false
 
 export ATTN_IMPLEMENTATION=flash_attention_2
@@ -61,7 +56,6 @@ export CUDA_DEVICE_ORDER=PCI_BUS_ID
 
 # 先求穩
 export NCCL_DEBUG=INFO
-# 先不要亂關，除非真的確認 IB / P2P 有問題
 # export NCCL_IB_DISABLE=1
 # export NCCL_P2P_DISABLE=1
 
@@ -75,10 +69,10 @@ echo "JOB ID: ${SLURM_JOB_ID}"
 echo "HOST: $(hostname)"
 echo "PWD: $(pwd)"
 echo "VENV: ${VENV}"
-echo "MODEL: ${MODEL}"
+echo "OUT: ${OUT}"
 echo "DATA: ${DATA}"
 echo "IMG_ROOT: ${IMG_ROOT}"
-echo "OUT: ${OUT}"
+echo "MODEL: ${MODEL}"
 echo "--------------------------------------"
 which python
 python -V
@@ -92,7 +86,7 @@ echo "libstdc++ => $(gcc -print-file-name=libstdc++.so.6)"
 echo "--------------------------------------"
 
 python - <<'PY'
-import torch, transformers
+import torch, transformers, os
 print("torch =", torch.__version__)
 print("torch.version.cuda =", torch.version.cuda)
 print("transformers =", transformers.__version__)
@@ -112,10 +106,7 @@ PY
 
 python - <<'PY'
 from transformers import AutoConfig
-cfg = AutoConfig.from_pretrained(
-    "/work/foobarbaz911/vlmr1/models/Qwen3-VL-8B-Instruct",
-    trust_remote_code=True
-)
+cfg = AutoConfig.from_pretrained("/work/foobarbaz911/vlmr1/models/Qwen3-VL-8B-Instruct", trust_remote_code=True)
 print("model_type =", getattr(cfg, "model_type", None))
 PY
 
@@ -138,10 +129,10 @@ deepspeed --num_gpus=4 --module open_r1.grpo_jsonl \
   --gradient_accumulation_steps 2 \
   --num_generations 2 \
   --learning_rate 1e-5 \
-  --max_steps 2 \
+  --max_steps 20 \
   --logging_steps 1 \
   --save_strategy steps \
-  --save_steps 1 \
+  --save_steps 20 \
   --save_total_limit 3 \
   --eval_strategy no \
   --reward_funcs accuracy format \

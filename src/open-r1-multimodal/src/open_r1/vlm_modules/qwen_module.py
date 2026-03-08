@@ -1,4 +1,9 @@
 from transformers import Qwen2_5_VLForConditionalGeneration, Qwen2VLForConditionalGeneration, AutoProcessor
+
+try:
+    from transformers import Qwen3VLForConditionalGeneration
+except ImportError:
+    Qwen3VLForConditionalGeneration = None
 from typing import Dict, Any, Union
 from trl.data_utils import maybe_apply_chat_template
 import torch
@@ -26,7 +31,13 @@ class Qwen2VLModule(VLMBaseModule):
         elif "Qwen2.5-VL" in model_id:
             model_cls = Qwen2_5_VLForConditionalGeneration
         elif "Qwen3-VL" in model_id:
-            model_cls = Qwen2_5_VLForConditionalGeneration  # Qwen3-VL uses same base class as Qwen2.5
+            if Qwen3VLForConditionalGeneration is not None:
+                model_cls = Qwen3VLForConditionalGeneration
+            else:
+                raise ImportError(
+                    "Qwen3VLForConditionalGeneration not available. "
+                    "Please upgrade transformers >= 4.57.0 with: pip install --upgrade transformers"
+                )
         else:
             raise ValueError(f"Unsupported model: {model_id}")
         return model_cls
@@ -53,26 +64,140 @@ class Qwen2VLModule(VLMBaseModule):
         prompts_text = [maybe_apply_chat_template(example, processing_class)["prompt"] for example in inputs]
         return prompts_text
     
-    def prepare_model_inputs(self, processing_class, prompts_text, images, return_tensors="pt", padding=True, padding_side="left", add_special_tokens=False):
-        # FIXME
-        # This could only process pure-multimodal or pure-text inputs
+    # def prepare_model_inputs(self, processing_class, prompts_text, images, return_tensors="pt", padding=True, padding_side="left", add_special_tokens=False):
+    #     # FIXME
+    #     # This could only process pure-multimodal or pure-text inputs
+    #     additional_output = None
+    #     if len(images) > 0:
+    #         prompt_inputs = processing_class(
+    #             text=prompts_text,
+    #             images=images,
+    #             return_tensors=return_tensors,
+    #             padding=padding,
+    #             padding_side=padding_side,
+    #             add_special_tokens=add_special_tokens)
+    #         additional_output = [{'image_grid_thw': image_grid_thw} for image_grid_thw in prompt_inputs['image_grid_thw']]
+    #     else:
+    #         prompt_inputs = processing_class(
+    #             text=prompts_text,
+    #             return_tensors=return_tensors,
+    #             padding=padding,
+    #             padding_side=padding_side,
+    #             add_special_tokens=add_special_tokens)
+    #     return prompt_inputs, additional_output
+    
+
+
+    def prepare_model_inputs(
+        self, processing_class, prompts_text, images,
+        return_tensors="pt", padding=True, padding_side="left", add_special_tokens=False
+    ):
         additional_output = None
-        if len(images) > 0:
+
+        # --------- helper ---------
+        def _debug_prompt(i: int):
+            p = prompts_text[i] if i < len(prompts_text) else ""
+            return p[:220].replace("\n", "\\n")
+
+        # --------- no image case ---------
+        if images is None or len(images) == 0:
             prompt_inputs = processing_class(
                 text=prompts_text,
-                images=images,
                 return_tensors=return_tensors,
                 padding=padding,
                 padding_side=padding_side,
-                add_special_tokens=add_special_tokens)
-            additional_output = [{'image_grid_thw': image_grid_thw} for image_grid_thw in prompt_inputs['image_grid_thw']]
+                add_special_tokens=add_special_tokens
+            )
+            return prompt_inputs, additional_output
+
+        # --------- normalize images to list-of-lists aligned with prompts ---------
+        # case A: already nested (per-sample)
+        is_nested = isinstance(images[0], (list, tuple))
+
+        if not is_nested:
+            # flat list of images -> split by <image> counts per prompt
+            counts = [p.count("<image>") for p in prompts_text]
+            if len(counts) == 1:
+                # single sample: allow flat -> wrap
+                images = [images]
+            else:
+                grouped = []
+                idx = 0
+                for i, c in enumerate(counts):
+                    if c <= 0:
+                        raise ValueError(
+                            f"[Qwen2VLModule] prompt[{i}] has 0 <image> tokens but got flat images list. "
+                            f"prompt[:220]={_debug_prompt(i)}"
+                        )
+                    chunk = images[idx: idx + c]
+                    if len(chunk) != c:
+                        raise ValueError(
+                            f"[Qwen2VLModule] not enough images for prompt[{i}]: need {c}, got {len(chunk)}. "
+                            f"idx={idx}, total_images={len(images)}. prompt[:220]={_debug_prompt(i)}"
+                        )
+                    grouped.append(chunk)
+                    idx += c
+                if idx != len(images):
+                    # leftover images that didn't get assigned
+                    raise ValueError(
+                        f"[Qwen2VLModule] leftover images after grouping: used {idx}, total {len(images)}. "
+                        f"counts={counts}"
+                    )
+                images = grouped
         else:
-            prompt_inputs = processing_class(
-                text=prompts_text,
-                return_tensors=return_tensors,
-                padding=padding,
-                padding_side=padding_side,
-                add_special_tokens=add_special_tokens)
+            # nested images -> validate each prompt has matching number of <image> tokens
+            counts = [p.count("<image>") for p in prompts_text]
+            if len(images) != len(prompts_text):
+                raise ValueError(
+                    f"[Qwen2VLModule] nested images batch mismatch: len(images)={len(images)} "
+                    f"len(prompts_text)={len(prompts_text)}"
+                )
+            for i, (c, im_list) in enumerate(zip(counts, images)):
+                if c <= 0:
+                    raise ValueError(
+                        f"[Qwen2VLModule] prompt[{i}] has 0 <image> tokens but received images[{i}] "
+                        f"with len={len(im_list)}. prompt[:220]={_debug_prompt(i)}"
+                    )
+                if len(im_list) != c:
+                    raise ValueError(
+                        f"[Qwen2VLModule] prompt[{i}] <image> count={c} but images[{i}] len={len(im_list)}. "
+                        f"prompt[:220]={_debug_prompt(i)}"
+                    )
+
+        # extra guard: ensure no empty list
+        for i, im_list in enumerate(images):
+            if len(im_list) == 0:
+                raise ValueError(
+                    f"[Qwen2VLModule] images[{i}] is empty after grouping. prompt[:220]={_debug_prompt(i)}"
+                )
+
+        # --------- call processor ---------
+        prompt_inputs = processing_class(
+            text=prompts_text,
+            images=images,
+            return_tensors=return_tensors,
+            padding=padding,
+            padding_side=padding_side,
+            add_special_tokens=add_special_tokens
+        )
+
+        # --------- align image_grid_thw per-sample ---------
+        grids = prompt_inputs.get("image_grid_thw", None)
+        if grids is None:
+            additional_output = [None] * len(prompts_text)
+        else:
+            if torch.is_tensor(grids):
+                # grids shape: (total_images, 3)
+                counts = [len(im_list) for im_list in images]
+                out = []
+                idx = 0
+                for c in counts:
+                    out.append({"image_grid_thw": grids[idx: idx + c]})
+                    idx += c
+                additional_output = out
+            else:
+                additional_output = [{"image_grid_thw": g} for g in grids]
+
         return prompt_inputs, additional_output
     
     @staticmethod
@@ -375,3 +500,125 @@ class Qwen2VLModule(VLMBaseModule):
                     raise ValueError(f"Unsupported task_type for location reward: {task_type}")
         else:
             raise ValueError(f"Unsupported reward function: {func}")
+
+
+class Qwen3VLModule(Qwen2VLModule):
+    """Module for Qwen3-VL models with different prompt and image handling."""
+    
+    def get_vlm_key(self):
+        return "qwen3"
+    
+    def get_model_class(self, model_id: str, model_init_kwargs: dict):
+        """Qwen3-VL uses Qwen3VLForConditionalGeneration class."""
+        if Qwen3VLForConditionalGeneration is None:
+            raise ImportError(
+                "Qwen3VLForConditionalGeneration not available. "
+                "Please upgrade transformers >= 4.57.0 with: pip install --upgrade transformers"
+            )
+        return Qwen3VLForConditionalGeneration
+    
+    def prepare_model_inputs(
+        self, processing_class, prompts_text, images,
+        return_tensors="pt", padding=True, padding_side="left", add_special_tokens=False
+    ):
+        """
+        Qwen3-VL format handling.
+        Qwen3-VL uses vision tokens like <|vision_start|><|image_pad|><|vision_end|> in the prompt.
+        We count these to determine how many images each prompt expects.
+        """
+        additional_output = None
+
+        # --------- no image case ---------
+        if images is None or len(images) == 0:
+            prompt_inputs = processing_class(
+                text=prompts_text,
+                return_tensors=return_tensors,
+                padding=padding,
+                padding_side=padding_side,
+                add_special_tokens=add_special_tokens
+            )
+            return prompt_inputs, additional_output
+
+        # --------- count Qwen3-style vision tokens in each prompt ---------
+        # Qwen3-VL uses: <|vision_start|><|image_pad|><|vision_end|> for each image
+        def count_vision_blocks(p: str) -> int:
+            """Count instances of vision blocks in Qwen3 format."""
+            return p.count("<|vision_start|>")
+        
+        counts = [count_vision_blocks(p) for p in prompts_text]
+        
+        # --------- normalize images to list-of-lists aligned with prompts ---------
+        is_nested = isinstance(images[0], (list, tuple))
+
+        if not is_nested:
+            # flat list of images -> group by counts
+            if len(counts) == 1:
+                # single prompt: wrap all images
+                images = [images]
+            else:
+                # multiple prompts: distribute images according to vision token counts
+                grouped = []
+                idx = 0
+                for i, c in enumerate(counts):
+                    if c <= 0:
+                        # No images needed for this prompt
+                        grouped.append([])
+                    else:
+                        chunk = images[idx: idx + c]
+                        if len(chunk) != c:
+                            raise ValueError(
+                                f"[Qwen3VLModule] not enough images for prompt[{i}]: need {c}, got {len(chunk)}. "
+                                f"idx={idx}, total_images={len(images)}"
+                            )
+                        grouped.append(chunk)
+                        idx += c
+                if idx != len(images):
+                    raise ValueError(
+                        f"[Qwen3VLModule] leftover images after grouping: used {idx}, total {len(images)}. "
+                        f"vision_block_counts={counts}"
+                    )
+                images = grouped
+        else:
+            # nested images -> validate batch size matches
+            if len(images) != len(prompts_text):
+                raise ValueError(
+                    f"[Qwen3VLModule] nested images batch mismatch: len(images)={len(images)} "
+                    f"len(prompts_text)={len(prompts_text)}"
+                )
+            # Validate that each prompt's vision block count matches image list length
+            for i, (c, im_list) in enumerate(zip(counts, images)):
+                if c > 0 and len(im_list) != c:
+                    raise ValueError(
+                        f"[Qwen3VLModule] prompt[{i}] vision blocks={c} but images[{i}] len={len(im_list)}"
+                    )
+
+        # --------- call processor ---------
+        prompt_inputs = processing_class(
+            text=prompts_text,
+            images=images,
+            return_tensors=return_tensors,
+            padding=padding,
+            padding_side=padding_side,
+            add_special_tokens=add_special_tokens
+        )
+
+        # --------- align image_grid_thw per-sample if present ---------
+        grids = prompt_inputs.get("image_grid_thw", None)
+        if grids is not None:
+            if torch.is_tensor(grids):
+                # grids might be flattened; align with image batch structure
+                counts_img = [len(im_list) for im_list in images]
+                out = []
+                idx = 0
+                for c in counts_img:
+                    if c > 0:
+                        out.append({"image_grid_thw": grids[idx: idx + c]})
+                    else:
+                        out.append(None)
+                    idx += c
+                additional_output = out
+            else:
+                # If grids is already a list
+                additional_output = [{"image_grid_thw": g} if g is not None else None for g in grids]
+        
+        return prompt_inputs, additional_output

@@ -151,6 +151,7 @@ venv.bak/
 .dmypy.json
 dmypy.json
 
+
 # Pyre type checker
 .pyre/
 
@@ -176,3 +177,8 @@ wandb/
 scripts/
 checkpoints/
 .vscode/
+
+
+# dong
+*.err
+*.out

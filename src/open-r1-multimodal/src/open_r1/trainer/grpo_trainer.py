@@ -252,7 +252,13 @@ class VLMGRPOTrainer(Trainer):
             False if args.gradient_checkpointing else model_init_kwargs.get("use_cache")
         )
         model_cls = self.vlm_module.get_model_class(model_id, model_init_kwargs)
-        model = model_cls.from_pretrained(model_id, **model_init_kwargs)
+        
+        # Remove use_cache for Qwen3-VL (not supported)
+        model_init_kwargs_to_use = model_init_kwargs.copy()
+        if "Qwen3-VL" in model_id and hasattr(model_cls, '__name__') and 'Qwen3VL' in model_cls.__name__:
+            model_init_kwargs_to_use.pop("use_cache", None)
+        
+        model = model_cls.from_pretrained(model_id, **model_init_kwargs_to_use)
 
         # LoRA
         self.vision_modules_keywords = self.vlm_module.get_vision_modules_keywords()

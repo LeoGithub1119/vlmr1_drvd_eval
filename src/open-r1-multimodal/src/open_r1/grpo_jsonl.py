@@ -917,7 +917,9 @@ SYSTEM_PROMPT = (
 
 
 def get_vlm_module(model_name_or_path):
-    if "qwen" in model_name_or_path.lower():
+    if "qwen3" in model_name_or_path.lower():
+        return Qwen3VLModule
+    elif "qwen" in model_name_or_path.lower():
         return Qwen2VLModule
     elif "internvl" in model_name_or_path.lower():
         return InvernVLModule
@@ -976,7 +978,7 @@ def main(script_args, training_args, model_args):
                     else:
                         raise ValueError(f"Unsupported image type: {type(item['image'])}")
                 # Remove immediate image loading
-                item['problem'] = item['conversations'][0]['value'].replace('<image>', '')
+                item['problem'] = item['conversations'][0]['value']
                 
                 # Handle solution that could be a float or string
                 solution_value = item['conversations'][1]['value']
