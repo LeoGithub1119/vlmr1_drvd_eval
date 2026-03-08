@@ -191,3 +191,5 @@ src/open-r1-multimodal/src/open_r1/grpo_jsonl_ocr.pysrc/eval/logs/
 *.jsonl
 *.json
 out_err/
+
+temp/

@@ -585,6 +585,19 @@ class VLMGRPOTrainer(Trainer):
 
         # Generate completions
         with unwrap_model_for_generation(model, self.accelerator) as unwrapped_model:
+            # Explicitly disable gradient checkpointing and enable cache for generation
+            if hasattr(unwrapped_model, "gradient_checkpointing_disable"):
+                unwrapped_model.gradient_checkpointing_disable()
+            if hasattr(unwrapped_model, "config"):
+                unwrapped_model.config.use_cache = True
+            
+            # Handle PeftModel case
+            if hasattr(unwrapped_model, "base_model"):
+                if hasattr(unwrapped_model.base_model, "gradient_checkpointing_disable"):
+                    unwrapped_model.base_model.gradient_checkpointing_disable()
+                if hasattr(unwrapped_model.base_model, "config"):
+                    unwrapped_model.base_model.config.use_cache = True
+
             generate_returned_result = unwrapped_model.generate(
                 **{k: v for k, v in prompt_inputs.items() if k not in self.vlm_module.get_non_generate_params()}, 
                 generation_config=self.generation_config

@@ -1,233 +1,0 @@
------------------
-loading CUDA 12.4
------------------
-
-/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv310_cu124/lib/python3.10/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
-  warnings.warn(
-/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv310_cu124/lib/python3.10/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
-  warnings.warn(
-/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv310_cu124/lib/python3.10/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
-  warnings.warn(
-/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv310_cu124/lib/python3.10/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
-  warnings.warn(
-/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv310_cu124/lib/python3.10/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
-  warnings.warn(
-/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv310_cu124/lib/python3.10/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
-  warnings.warn(
-/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv310_cu124/lib/python3.10/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
-  warnings.warn(
-/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv310_cu124/lib/python3.10/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
-  warnings.warn(
-/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv310_cu124/lib/python3.10/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
-  warnings.warn(
-Map (num_proc=8):   0%|          | 0/40960 [00:00<?, ? examples/s]Map (num_proc=8):   0%|          | 0/40960 [00:00<?, ? examples/s]Map (num_proc=8):   0%|          | 0/40960 [00:00<?, ? examples/s]Map (num_proc=8):   0%|          | 0/40960 [00:00<?, ? examples/s]Map (num_proc=8):   1%|          | 349/40960 [00:00<01:14, 542.31 examples/s]Map (num_proc=8):   2%|▏         | 1000/40960 [00:00<00:28, 1391.36 examples/s]Map (num_proc=8):   7%|▋         | 2928/40960 [00:00<00:08, 4560.08 examples/s]Map (num_proc=8):  12%|█▏        | 4758/40960 [00:01<00:04, 7344.89 examples/s]Map (num_proc=8):  15%|█▌        | 6303/40960 [00:01<00:04, 7611.30 examples/s]Map (num_proc=8):  23%|██▎       | 9568/40960 [00:01<00:02, 12266.34 examples/s]Map (num_proc=8):   2%|▏         | 689/40960 [00:00<00:43, 921.22 examples/s]Map (num_proc=8):   2%|▏         | 689/40960 [00:00<00:43, 920.19 examples/s]Map (num_proc=8):   2%|▏         | 689/40960 [00:00<00:43, 921.13 examples/s]Map (num_proc=8):   6%|▌         | 2351/40960 [00:00<00:12, 3128.58 examples/s]Map (num_proc=8):   6%|▌         | 2340/40960 [00:00<00:12, 3037.81 examples/s]Map (num_proc=8):   6%|▌         | 2343/40960 [00:00<00:13, 2950.76 examples/s]Map (num_proc=8):   9%|▊         | 3514/40960 [00:01<00:08, 4576.85 examples/s]Map (num_proc=8):  27%|██▋       | 11251/40960 [00:01<00:03, 8668.65 examples/s]Map (num_proc=8):  10%|▉         | 4000/40960 [00:01<00:07, 4997.05 examples/s]Map (num_proc=8):  10%|▉         | 4000/40960 [00:01<00:07, 4940.88 examples/s]Map (num_proc=8):  13%|█▎        | 5479/40960 [00:01<00:05, 7094.12 examples/s]Map (num_proc=8):  15%|█▍        | 6120/40960 [00:01<00:04, 7643.98 examples/s]Map (num_proc=8):  15%|█▍        | 6120/40960 [00:01<00:04, 7434.78 examples/s]Map (num_proc=8):  34%|███▍      | 14022/40960 [00:01<00:02, 10467.56 examples/s]Map (num_proc=8):  18%|█▊        | 7262/40960 [00:01<00:04, 8037.70 examples/s]Map (num_proc=8):  39%|███▉      | 16020/40960 [00:01<00:02, 11793.88 examples/s]Map (num_proc=8):  18%|█▊        | 7364/40960 [00:01<00:04, 7296.90 examples/s]Map (num_proc=8):  44%|████▍     | 18077/40960 [00:02<00:01, 12036.40 examples/s]Map (num_proc=8):  19%|█▉        | 7986/40960 [00:01<00:05, 6492.78 examples/s]Map (num_proc=8):  21%|██▏       | 8799/40960 [00:01<00:04, 6808.11 examples/s]Map (num_proc=8):  21%|██        | 8527/40960 [00:01<00:05, 6208.49 examples/s]Map (num_proc=8):  29%|██▉       | 11827/40960 [00:01<00:02, 11292.19 examples/s]Map (num_proc=8):  29%|██▉       | 12054/40960 [00:01<00:02, 10885.21 examples/s]Map (num_proc=8):  48%|████▊     | 19635/40960 [00:02<00:02, 8890.93 examples/s] Map (num_proc=8):  34%|███▍      | 13914/40960 [00:01<00:02, 9991.69 examples/s] Map (num_proc=8):  54%|█████▍    | 22266/40960 [00:02<00:01, 11379.27 examples/s]Map (num_proc=8):  34%|███▎      | 13739/40960 [00:02<00:03, 8762.37 examples/s] Map (num_proc=8):  42%|████▏     | 17087/40960 [00:02<00:01, 12937.81 examples/s]Map (num_proc=8):  59%|█████▉    | 24131/40960 [00:02<00:01, 12095.01 examples/s]Map (num_proc=8):  32%|███▏      | 13227/40960 [00:02<00:03, 8231.58 examples/s]Map (num_proc=8):  41%|████      | 16693/40960 [00:02<00:01, 12196.71 examples/s]Map (num_proc=8):  45%|████▌     | 18566/40960 [00:02<00:02, 9975.04 examples/s] Map (num_proc=8):  47%|████▋     | 19192/40960 [00:02<00:02, 8974.65 examples/s] Map (num_proc=8):  63%|██████▎   | 25738/40960 [00:03<00:01, 7770.71 examples/s] Map (num_proc=8):  42%|████▏     | 17002/40960 [00:02<00:02, 8359.53 examples/s]Map (num_proc=8):  54%|█████▍    | 22317/40960 [00:02<00:01, 13351.24 examples/s]Map (num_proc=8):  55%|█████▌    | 22666/40960 [00:02<00:01, 13829.60 examples/s]Map (num_proc=8):  55%|█████▍    | 22480/40960 [00:02<00:01, 9723.29 examples/s]Map (num_proc=8):  73%|███████▎  | 29837/40960 [00:03<00:01, 9944.24 examples/s]Map (num_proc=8):  59%|█████▉    | 24114/40960 [00:02<00:01, 10274.45 examples/s]Map (num_proc=8):  66%|██████▌   | 26990/40960 [00:02<00:01, 13929.86 examples/s]Map (num_proc=8):  80%|████████  | 32790/40960 [00:03<00:00, 11975.21 examples/s]Map (num_proc=8):  62%|██████▏   | 25423/40960 [00:02<00:01, 11913.63 examples/s]Map (num_proc=8):  69%|██████▉   | 28278/40960 [00:03<00:00, 14401.74 examples/s]Map (num_proc=8):  73%|███████▎  | 29748/40960 [00:03<00:00, 15730.69 examples/s]Map (num_proc=8):  84%|████████▍ | 34361/40960 [00:03<00:00, 12407.79 examples/s]Map (num_proc=8):  67%|██████▋   | 27305/40960 [00:03<00:01, 12752.37 examples/s]Map (num_proc=8):  74%|███████▍  | 30514/40960 [00:03<00:00, 12718.13 examples/s]Map (num_proc=8):  78%|███████▊  | 32071/40960 [00:03<00:00, 13896.55 examples/s]Map (num_proc=8):  88%|████████▊ | 36050/40960 [00:03<00:00, 10134.95 examples/s]Map (num_proc=8):  80%|████████  | 32942/40960 [00:03<00:00, 14240.29 examples/s]Map (num_proc=8):  72%|███████▏  | 29485/40960 [00:03<00:01, 10286.88 examples/s]Map (num_proc=8):  95%|█████████▍| 38805/40960 [00:04<00:00, 12416.89 examples/s]Map (num_proc=8):  85%|████████▍ | 34656/40960 [00:03<00:00, 12976.76 examples/s]Map (num_proc=8):  85%|████████▍ | 34720/40960 [00:03<00:00, 13235.10 examples/s]Map (num_proc=8):  90%|████████▉ | 36863/40960 [00:03<00:00, 14450.76 examples/s]Map (num_proc=8):  99%|█████████▊| 40365/40960 [00:04<00:00, 10698.95 examples/s]Map (num_proc=8):  80%|████████  | 32927/40960 [00:03<00:00, 11144.77 examples/s]Map (num_proc=8):  95%|█████████▍| 38840/40960 [00:03<00:00, 14016.41 examples/s]Map (num_proc=8):  89%|████████▉ | 36505/40960 [00:03<00:00, 14100.83 examples/s]Map (num_proc=8):  95%|█████████▍| 38840/40960 [00:03<00:00, 11575.55 examples/s]Map (num_proc=8):  95%|█████████▍| 38741/40960 [00:04<00:00, 12217.21 examples/s]Map (num_proc=8): 100%|██████████| 40960/40960 [00:04<00:00, 8586.13 examples/s] 
-Map (num_proc=8): 100%|██████████| 40960/40960 [00:04<00:00, 9797.71 examples/s] 
-Map (num_proc=8): 100%|█████████▉| 40840/40960 [00:04<00:00, 13301.38 examples/s]Map (num_proc=8): 100%|██████████| 40960/40960 [00:04<00:00, 9314.56 examples/s] 
-`torch_dtype` is deprecated! Use `dtype` instead!
-`torch_dtype` is deprecated! Use `dtype` instead!
-Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Map (num_proc=8): 100%|██████████| 40960/40960 [00:04<00:00, 8958.25 examples/s] 
-Loading checkpoint shards: 100%|██████████| 4/4 [00:00<00:00, 58.83it/s]
-Loading checkpoint shards: 100%|██████████| 4/4 [00:00<00:00, 59.98it/s]
-`torch_dtype` is deprecated! Use `dtype` instead!
-Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:00<00:00, 60.60it/s]
-`torch_dtype` is deprecated! Use `dtype` instead!
-Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:00<00:00, 58.47it/s]
-/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/src/open_r1/trainer/grpo_trainer.py:375: UserWarning: Setting max_prompt_length is currently not supported, it has been set to None
-  warnings.warn("Setting max_prompt_length is currently not supported, it has been set to None")
-The tokenizer has new PAD/BOS/EOS tokens that differ from the model config and generation config. The model config and generation config were aligned accordingly, being updated with the tokenizer's values. Updated tokens: {'eos_token_id': 151645, 'bos_token_id': None, 'pad_token_id': 151643}.
-/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/src/open_r1/trainer/grpo_trainer.py:375: UserWarning: Setting max_prompt_length is currently not supported, it has been set to None
-  warnings.warn("Setting max_prompt_length is currently not supported, it has been set to None")
-Detected kernel version 4.18.0, which is below the recommended minimum of 5.5.0; this can cause the process to hang. It is recommended to upgrade the kernel to the minimum version or higher.
-/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/src/open_r1/trainer/grpo_trainer.py:375: UserWarning: Setting max_prompt_length is currently not supported, it has been set to None
-  warnings.warn("Setting max_prompt_length is currently not supported, it has been set to None")
-The tokenizer has new PAD/BOS/EOS tokens that differ from the model config and generation config. The model config and generation config were aligned accordingly, being updated with the tokenizer's values. Updated tokens: {'eos_token_id': 151645, 'bos_token_id': None, 'pad_token_id': 151643}.
-The tokenizer has new PAD/BOS/EOS tokens that differ from the model config and generation config. The model config and generation config were aligned accordingly, being updated with the tokenizer's values. Updated tokens: {'eos_token_id': 151645, 'bos_token_id': None, 'pad_token_id': 151643}.
-/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/src/open_r1/trainer/grpo_trainer.py:375: UserWarning: Setting max_prompt_length is currently not supported, it has been set to None
-  warnings.warn("Setting max_prompt_length is currently not supported, it has been set to None")
-Gradient accumulation steps mismatch: GradientAccumulationPlugin has 1, DeepSpeed config has 2. Using DeepSpeed's value.
-The tokenizer has new PAD/BOS/EOS tokens that differ from the model config and generation config. The model config and generation config were aligned accordingly, being updated with the tokenizer's values. Updated tokens: {'eos_token_id': 151645, 'bos_token_id': None, 'pad_token_id': 151643}.
-Using /work/foobarbaz911/vlmr1/xdg_cache/torch_extensions/py310_cu124 as PyTorch extensions root...Using /work/foobarbaz911/vlmr1/xdg_cache/torch_extensions/py310_cu124 as PyTorch extensions root...
-
-Using /work/foobarbaz911/vlmr1/xdg_cache/torch_extensions/py310_cu124 as PyTorch extensions root...
-Detected CUDA files, patching ldflags
-Emitting ninja build file /work/foobarbaz911/vlmr1/xdg_cache/torch_extensions/py310_cu124/fused_adam/build.ninja...
-/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv310_cu124/lib/python3.10/site-packages/torch/utils/cpp_extension.py:2059: UserWarning: TORCH_CUDA_ARCH_LIST is not set, all archs for visible cards are included for compilation. 
-If this is not desired, please set os.environ['TORCH_CUDA_ARCH_LIST'].
-  warnings.warn(
-Building extension module fused_adam...
-Allowing ninja to set a default number of workers... (overridable by setting the environment variable MAX_JOBS=N)
-Using /work/foobarbaz911/vlmr1/xdg_cache/torch_extensions/py310_cu124 as PyTorch extensions root...
-Loading extension module fused_adam...
-Loading extension module fused_adam...
-Loading extension module fused_adam...
-Loading extension module fused_adam...
-`generation_config` default values have been modified to match model-specific defaults: {'temperature': 0.7, 'top_k': 20, 'top_p': 0.8, 'eos_token_id': [151645, 151645, 151643]}. If this is not desired, please set these values explicitly.
-`generation_config` default values have been modified to match model-specific defaults: {'temperature': 0.7, 'top_k': 20, 'top_p': 0.8, 'eos_token_id': [151645, 151645, 151643]}. If this is not desired, please set these values explicitly.
-`generation_config` default values have been modified to match model-specific defaults: {'temperature': 0.7, 'top_k': 20, 'top_p': 0.8, 'eos_token_id': [151645, 151645, 151643]}. If this is not desired, please set these values explicitly.
-/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv310_cu124/lib/python3.10/site-packages/torch/utils/checkpoint.py:87: UserWarning: None of the inputs have requires_grad=True. Gradients will be None
-  warnings.warn(
-/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv310_cu124/lib/python3.10/site-packages/torch/utils/checkpoint.py:87: UserWarning: None of the inputs have requires_grad=True. Gradients will be None
-  warnings.warn(
-wandb: [wandb.login()] Loaded credentials for https://api.wandb.ai from /home/foobarbaz911/.netrc.
-/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv310_cu124/lib/python3.10/site-packages/torch/utils/checkpoint.py:87: UserWarning: None of the inputs have requires_grad=True. Gradients will be None
-  warnings.warn(
-`use_cache=True` is incompatible with gradient checkpointing. Setting `use_cache=False`.
-`use_cache=True` is incompatible with gradient checkpointing. Setting `use_cache=False`.
-Caching is incompatible with gradient checkpointing in Qwen3VLTextDecoderLayer. Setting `past_key_values=None`.
-Caching is incompatible with gradient checkpointing in Qwen3VLTextDecoderLayer. Setting `past_key_values=None`.
-wandb: Currently logged in as: oiiaii (oiiaii-nchc) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
-`use_cache=True` is incompatible with gradient checkpointing. Setting `use_cache=False`.
-Caching is incompatible with gradient checkpointing in Qwen3VLTextDecoderLayer. Setting `past_key_values=None`.
-[rank3]: Traceback (most recent call last):
-[rank3]:   File "/home/foobarbaz911/.local/share/uv/python/cpython-3.10-linux-x86_64-gnu/lib/python3.10/runpy.py", line 196, in _run_module_as_main
-[rank3]:     return _run_code(code, main_globals, None,
-[rank3]:   File "/home/foobarbaz911/.local/share/uv/python/cpython-3.10-linux-x86_64-gnu/lib/python3.10/runpy.py", line 86, in _run_code
-[rank3]:     exec(code, run_globals)
-[rank3]:   File "/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/src/open_r1/grpo_jsonl.py", line 1082, in <module>
-[rank3]:     main(script_args, training_args, model_args)
-[rank3]:   File "/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/src/open_r1/grpo_jsonl.py", line 1068, in main
-[rank3]:     trainer.train()
-[rank3]:   File "/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv310_cu124/lib/python3.10/site-packages/transformers/trainer.py", line 2325, in train
-[rank3]:     return inner_training_loop(
-[rank3]:   File "/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv310_cu124/lib/python3.10/site-packages/transformers/trainer.py", line 2674, in _inner_training_loop
-[rank3]:     tr_loss_step = self.training_step(model, inputs, num_items_in_batch)
-[rank3]:   File "/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv310_cu124/lib/python3.10/site-packages/transformers/trainer.py", line 4020, in training_step
-[rank3]:     loss = self.compute_loss(model, inputs, num_items_in_batch=num_items_in_batch)
-[rank3]:   File "/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/src/open_r1/trainer/grpo_trainer.py", line 732, in compute_loss
-[rank3]:     inputs = self._generate_and_score_completions(inputs, model)
-[rank3]:   File "/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/src/open_r1/trainer/grpo_trainer.py", line 588, in _generate_and_score_completions
-[rank3]:     generate_returned_result = unwrapped_model.generate(
-[rank3]:   File "/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv310_cu124/lib/python3.10/site-packages/peft/peft_model.py", line 2048, in generate
-[rank3]:     outputs = self.base_model.generate(*args, **kwargs)
-[rank3]:   File "/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv310_cu124/lib/python3.10/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
-[rank3]:     return func(*args, **kwargs)
-[rank3]:   File "/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv310_cu124/lib/python3.10/site-packages/transformers/generation/utils.py", line 2564, in generate
-[rank3]:     result = decoding_method(
-[rank3]:   File "/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv310_cu124/lib/python3.10/site-packages/transformers/generation/utils.py", line 2787, in _sample
-[rank3]:     outputs = model_forward(**model_inputs, return_dict=True)
-[rank3]:   File "/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv310_cu124/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
-[rank3]:     return self._call_impl(*args, **kwargs)
-[rank3]:   File "/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv310_cu124/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
-[rank3]:     return forward_call(*args, **kwargs)
-[rank3]:   File "/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv310_cu124/lib/python3.10/site-packages/transformers/utils/generic.py", line 1072, in wrapper
-[rank3]:     outputs = func(self, *args, **kwargs)
-[rank3]:   File "/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv310_cu124/lib/python3.10/site-packages/transformers/models/qwen3_vl/modeling_qwen3_vl.py", line 1344, in forward
-[rank3]:     outputs = self.model(
-[rank3]:   File "/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv310_cu124/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
-[rank3]:     return self._call_impl(*args, **kwargs)
-[rank3]:   File "/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv310_cu124/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
-[rank3]:     return forward_call(*args, **kwargs)
-[rank3]:   File "/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv310_cu124/lib/python3.10/site-packages/transformers/utils/generic.py", line 1072, in wrapper
-[rank3]:     outputs = func(self, *args, **kwargs)
-[rank3]:   File "/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv310_cu124/lib/python3.10/site-packages/transformers/models/qwen3_vl/modeling_qwen3_vl.py", line 1201, in forward
-[rank3]:     position_ids, rope_deltas = self.get_rope_index(
-[rank3]:   File "/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv310_cu124/lib/python3.10/site-packages/transformers/models/qwen3_vl/modeling_qwen3_vl.py", line 949, in get_rope_index
-[rank3]:     input_ids = input_ids[attention_mask[i] == 1]
-[rank3]: IndexError: The shape of the mask [695] at index 0 does not match the shape of the indexed tensor [1] at index 0
-[rank1]: Traceback (most recent call last):
-[rank1]:   File "/home/foobarbaz911/.local/share/uv/python/cpython-3.10-linux-x86_64-gnu/lib/python3.10/runpy.py", line 196, in _run_module_as_main
-[rank1]:     return _run_code(code, main_globals, None,
-[rank1]:   File "/home/foobarbaz911/.local/share/uv/python/cpython-3.10-linux-x86_64-gnu/lib/python3.10/runpy.py", line 86, in _run_code
-[rank1]:     exec(code, run_globals)
-[rank1]:   File "/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/src/open_r1/grpo_jsonl.py", line 1082, in <module>
-[rank1]:     main(script_args, training_args, model_args)
-[rank1]:   File "/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/src/open_r1/grpo_jsonl.py", line 1068, in main
-[rank1]:     trainer.train()
-[rank1]:   File "/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv310_cu124/lib/python3.10/site-packages/transformers/trainer.py", line 2325, in train
-[rank1]:     return inner_training_loop(
-[rank1]:   File "/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv310_cu124/lib/python3.10/site-packages/transformers/trainer.py", line 2674, in _inner_training_loop
-[rank1]:     tr_loss_step = self.training_step(model, inputs, num_items_in_batch)
-[rank1]:   File "/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv310_cu124/lib/python3.10/site-packages/transformers/trainer.py", line 4020, in training_step
-[rank1]:     loss = self.compute_loss(model, inputs, num_items_in_batch=num_items_in_batch)
-[rank1]:   File "/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/src/open_r1/trainer/grpo_trainer.py", line 732, in compute_loss
-[rank1]:     inputs = self._generate_and_score_completions(inputs, model)
-[rank1]:   File "/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/src/open_r1/trainer/grpo_trainer.py", line 588, in _generate_and_score_completions
-[rank1]:     generate_returned_result = unwrapped_model.generate(
-[rank1]:   File "/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv310_cu124/lib/python3.10/site-packages/peft/peft_model.py", line 2048, in generate
-[rank1]:     outputs = self.base_model.generate(*args, **kwargs)
-[rank1]:   File "/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv310_cu124/lib/python3.10/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
-[rank1]:     return func(*args, **kwargs)
-[rank1]:   File "/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv310_cu124/lib/python3.10/site-packages/transformers/generation/utils.py", line 2564, in generate
-[rank1]:     result = decoding_method(
-[rank1]:   File "/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv310_cu124/lib/python3.10/site-packages/transformers/generation/utils.py", line 2787, in _sample
-[rank1]:     outputs = model_forward(**model_inputs, return_dict=True)
-[rank1]:   File "/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv310_cu124/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
-[rank1]:     return self._call_impl(*args, **kwargs)
-[rank1]:   File "/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv310_cu124/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
-[rank1]:     return forward_call(*args, **kwargs)
-[rank1]:   File "/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv310_cu124/lib/python3.10/site-packages/transformers/utils/generic.py", line 1072, in wrapper
-[rank1]:     outputs = func(self, *args, **kwargs)
-[rank1]:   File "/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv310_cu124/lib/python3.10/site-packages/transformers/models/qwen3_vl/modeling_qwen3_vl.py", line 1344, in forward
-[rank1]:     outputs = self.model(
-[rank1]:   File "/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv310_cu124/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
-[rank1]:     return self._call_impl(*args, **kwargs)
-[rank1]:   File "/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv310_cu124/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
-[rank1]:     return forward_call(*args, **kwargs)
-[rank1]:   File "/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv310_cu124/lib/python3.10/site-packages/transformers/utils/generic.py", line 1072, in wrapper
-[rank1]:     outputs = func(self, *args, **kwargs)
-[rank1]:   File "/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv310_cu124/lib/python3.10/site-packages/transformers/models/qwen3_vl/modeling_qwen3_vl.py", line 1201, in forward
-[rank1]:     position_ids, rope_deltas = self.get_rope_index(
-[rank1]:   File "/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv310_cu124/lib/python3.10/site-packages/transformers/models/qwen3_vl/modeling_qwen3_vl.py", line 949, in get_rope_index
-[rank1]:     input_ids = input_ids[attention_mask[i] == 1]
-[rank1]: IndexError: The shape of the mask [686] at index 0 does not match the shape of the indexed tensor [1] at index 0
-[rank2]: Traceback (most recent call last):
-[rank2]:   File "/home/foobarbaz911/.local/share/uv/python/cpython-3.10-linux-x86_64-gnu/lib/python3.10/runpy.py", line 196, in _run_module_as_main
-[rank2]:     return _run_code(code, main_globals, None,
-[rank2]:   File "/home/foobarbaz911/.local/share/uv/python/cpython-3.10-linux-x86_64-gnu/lib/python3.10/runpy.py", line 86, in _run_code
-[rank2]:     exec(code, run_globals)
-[rank2]:   File "/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/src/open_r1/grpo_jsonl.py", line 1082, in <module>
-[rank2]:     main(script_args, training_args, model_args)
-[rank2]:   File "/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/src/open_r1/grpo_jsonl.py", line 1068, in main
-[rank2]:     trainer.train()
-[rank2]:   File "/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv310_cu124/lib/python3.10/site-packages/transformers/trainer.py", line 2325, in train
-[rank2]:     return inner_training_loop(
-[rank2]:   File "/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv310_cu124/lib/python3.10/site-packages/transformers/trainer.py", line 2674, in _inner_training_loop
-[rank2]:     tr_loss_step = self.training_step(model, inputs, num_items_in_batch)
-[rank2]:   File "/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv310_cu124/lib/python3.10/site-packages/transformers/trainer.py", line 4020, in training_step
-[rank2]:     loss = self.compute_loss(model, inputs, num_items_in_batch=num_items_in_batch)
-[rank2]:   File "/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/src/open_r1/trainer/grpo_trainer.py", line 732, in compute_loss
-[rank2]:     inputs = self._generate_and_score_completions(inputs, model)
-[rank2]:   File "/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/src/open_r1/trainer/grpo_trainer.py", line 588, in _generate_and_score_completions
-[rank2]:     generate_returned_result = unwrapped_model.generate(
-[rank2]:   File "/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv310_cu124/lib/python3.10/site-packages/peft/peft_model.py", line 2048, in generate
-[rank2]:     outputs = self.base_model.generate(*args, **kwargs)
-[rank2]:   File "/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv310_cu124/lib/python3.10/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
-[rank2]:     return func(*args, **kwargs)
-[rank2]:   File "/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv310_cu124/lib/python3.10/site-packages/transformers/generation/utils.py", line 2564, in generate
-[rank2]:     result = decoding_method(
-[rank2]:   File "/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv310_cu124/lib/python3.10/site-packages/transformers/generation/utils.py", line 2787, in _sample
-[rank2]:     outputs = model_forward(**model_inputs, return_dict=True)
-[rank2]:   File "/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv310_cu124/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
-[rank2]:     return self._call_impl(*args, **kwargs)
-[rank2]:   File "/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv310_cu124/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
-[rank2]:     return forward_call(*args, **kwargs)
-[rank2]:   File "/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv310_cu124/lib/python3.10/site-packages/transformers/utils/generic.py", line 1072, in wrapper
-[rank2]:     outputs = func(self, *args, **kwargs)
-[rank2]:   File "/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv310_cu124/lib/python3.10/site-packages/transformers/models/qwen3_vl/modeling_qwen3_vl.py", line 1344, in forward
-[rank2]:     outputs = self.model(
-[rank2]:   File "/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv310_cu124/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
-[rank2]:     return self._call_impl(*args, **kwargs)
-[rank2]:   File "/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv310_cu124/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
-[rank2]:     return forward_call(*args, **kwargs)
-[rank2]:   File "/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv310_cu124/lib/python3.10/site-packages/transformers/utils/generic.py", line 1072, in wrapper
-[rank2]:     outputs = func(self, *args, **kwargs)
-[rank2]:   File "/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv310_cu124/lib/python3.10/site-packages/transformers/models/qwen3_vl/modeling_qwen3_vl.py", line 1201, in forward
-[rank2]:     position_ids, rope_deltas = self.get_rope_index(
-[rank2]:   File "/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv310_cu124/lib/python3.10/site-packages/transformers/models/qwen3_vl/modeling_qwen3_vl.py", line 949, in get_rope_index
-[rank2]:     input_ids = input_ids[attention_mask[i] == 1]
-[rank2]: IndexError: The shape of the mask [695] at index 0 does not match the shape of the indexed tensor [1] at index 0
-wandb: setting up run oi2x0zrl
-wandb: Tracking run with wandb version 0.25.0
-wandb: Run data is saved locally in /home/foobarbaz911/VLM-R1/wandb/run-20260308_190745-oi2x0zrl
-wandb: Run `wandb offline` to turn off syncing.
-wandb: Syncing run dauntless-night-34
-wandb: ⭐️ View project at https://wandb.ai/oiiaii-nchc/huggingface
-wandb: 🚀 View run at https://wandb.ai/oiiaii-nchc/huggingface/runs/oi2x0zrl
-wandb: Detected [openai] in use.
-wandb: Use W&B Weave for improved LLM call tracing. Install Weave with `pip install weave` then add `import weave` to the top of your script.
-wandb: For more information, check out the docs at: https://weave-docs.wandb.ai/
-  0%|          | 0/20 [00:00<?, ?it/s]`generation_config` default values have been modified to match model-specific defaults: {'temperature': 0.7, 'top_k': 20, 'top_p': 0.8, 'eos_token_id': [151645, 151645, 151643]}. If this is not desired, please set these values explicitly.
-/home/foobarbaz911/VLM-R1/src/open-r1-multimodal/.venv310_cu124/lib/python3.10/site-packages/torch/utils/checkpoint.py:87: UserWarning: None of the inputs have requires_grad=True. Gradients will be None
-  warnings.warn(
-`use_cache=True` is incompatible with gradient checkpointing. Setting `use_cache=False`.
-Caching is incompatible with gradient checkpointing in Qwen3VLTextDecoderLayer. Setting `past_key_values=None`.
