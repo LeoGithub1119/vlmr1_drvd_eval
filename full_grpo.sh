@@ -2,7 +2,7 @@
 #SBATCH -J grpo_qa_list
 #SBATCH -p normal
 #SBATCH --gres=gpu:4
-#SBATCH --cpus-per-task=12
+#SBATCH --cpus-per-task=24
 #SBATCH -t 24:00:00
 #SBATCH -o /home/foobarbaz911/VLM-R1/temp/grpo_qa_list_%j.out
 #SBATCH -e /home/foobarbaz911/VLM-R1/temp/grpo_qa_list_%j.err
@@ -19,8 +19,8 @@ MODEL=${WORK}/models/Qwen3-VL-8B-Instruct
 DATA=${WORK}/datasets/grpo_qa_list_fixed.jsonl
 IMG_ROOT=${WORK}/datasets/IAD256
 
-OUT=/home/foobarbaz911/VLM-R1/temp/grpo_qa_list_${SLURM_JOB_ID}
-# OUT=/work/foobarbaz911/vlmr1/outputs/grpo_${SLURM_JOB_ID}
+# OUT=/home/foobarbaz911/VLM-R1/temp/grpo_qa_list_${SLURM_JOB_ID}
+OUT=/work/foobarbaz911/vlmr1/outputs/grpo_${SLURM_JOB_ID}
 mkdir -p \
   /home/foobarbaz911/VLM-R1/temp \
   "${OUT}" \
@@ -60,12 +60,15 @@ export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 export CUDA_DEVICE_ORDER=PCI_BUS_ID
 
 # 先求穩
-export NCCL_DEBUG=INFO
+# export NCCL_DEBUG=INFO
 # 先不要亂關，除非真的確認 IB / P2P 有問題
 # export NCCL_IB_DISABLE=1
 # export NCCL_P2P_DISABLE=1
 
-export MASTER_PORT=$((12000 + RANDOM % 20000))
+export MASTER_PORT=$((15000 + (SLURM_JOB_ID % 10000)))
+
+# export DEBUG_MODE=true
+export LOG_PATH=/home/foobarbaz911/VLM-R1/temp/grpo_debug_${SLURM_JOB_ID}.txt
 
 ########################################
 # Sanity checks
@@ -134,15 +137,15 @@ deepspeed --num_gpus=4 --module open_r1.grpo_jsonl \
   --do_eval false \
   --bf16 true \
   --tf32 true \
-  --per_device_train_batch_size 1 \
+  --per_device_train_batch_size 2 \
   --gradient_accumulation_steps 2 \
-  --num_generations 2 \
-  --learning_rate 1e-5 \
-  --max_steps 2 \
-  --logging_steps 1 \
+  --num_generations 4 \
+  --learning_rate 2e-6 \
+  --max_steps 5120 \
+  --logging_steps 10 \
   --save_strategy steps \
-  --save_steps 1 \
-  --save_total_limit 3 \
+  --save_steps 200 \
+  --save_total_limit 10 \
   --eval_strategy no \
   --reward_funcs accuracy format \
   --gradient_checkpointing \
@@ -151,10 +154,11 @@ deepspeed --num_gpus=4 --module open_r1.grpo_jsonl \
   --freeze_vision_modules true \
   --max_pixels 262144 \
   --use_peft true \
-  --lora_r 8 \
-  --lora_alpha 16 \
+  --lora_r 64 \
+  --lora_alpha 64 \
   --lora_dropout 0.05 \
-  --lora_target_modules q_proj k_proj v_proj o_proj
+  --lora_target_modules q_proj k_proj v_proj o_proj \
+  --resume_from_checkpoint "/work/foobarbaz911/vlmr1/outputs/grpo_133652/checkpoint-3320" 
 
 ########################################
 # Post-run summary

@@ -971,9 +971,22 @@ def main(script_args, training_args, model_args):
     total = sum(p.numel() for p in trainer.model.parameters())
     print("trainable/total:", trainable, "/", total)
 
-    if list(pathlib.Path(training_args.output_dir).glob("checkpoint-*")):
+    # if list(pathlib.Path(training_args.output_dir).glob("checkpoint-*")):
+    #     trainer.train(resume_from_checkpoint=True)
+    # else:
+    #     trainer.train()
+    #     resume_ckpt = getattr(training_args, "resume_from_checkpoint", None)
+
+    resume_ckpt = getattr(training_args, "resume_from_checkpoint", None)
+
+    if resume_ckpt:
+        print(f"Resuming from explicit checkpoint: {resume_ckpt}")
+        trainer.train(resume_from_checkpoint=resume_ckpt)
+    elif list(pathlib.Path(training_args.output_dir).glob("checkpoint-*")):
+        print(f"Resuming from latest checkpoint in output_dir: {training_args.output_dir}")
         trainer.train(resume_from_checkpoint=True)
     else:
+        print("Starting training from scratch")
         trainer.train()
 
     trainer.save_model(training_args.output_dir)
