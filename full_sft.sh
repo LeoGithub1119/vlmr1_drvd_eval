@@ -1,28 +1,25 @@
 #!/bin/bash
-#SBATCH -J grpo_qa_list
+#SBATCH -J sft_qwen3_full
 #SBATCH -p normal
 #SBATCH --gres=gpu:4
 #SBATCH --cpus-per-task=24
-#SBATCH -t 48:00:00
-#SBATCH -o /home/foobarbaz911/VLM-R1/temp/sft_then_grpo_%j.out
-#SBATCH -e /home/foobarbaz911/VLM-R1/temp/sft_then_grpo_%j.err
+#SBATCH -t 24:00:00
+#SBATCH -o /home/foobarbaz911/VLM-R1/temp/sft_qwen3_full_%j.out
+#SBATCH -e /home/foobarbaz911/VLM-R1/temp/sft_qwen3_full_%j.err
 #SBATCH --account=mst114553
 
 set -euo pipefail
 
 WORK=/work/foobarbaz911/vlmr1
 REPO=/home/foobarbaz911/VLM-R1
-PKG_ROOT=/home/foobarbaz911/VLM-R1/src/open-r1-multimodal
+PKG_ROOT=${REPO}/src/open-r1-multimodal
 VENV=${PKG_ROOT}/.venv310_cu124
 
-# MODEL=${WORK}/models/Qwen3-VL-8B-Instruct
-MODEL=${WORK}/outputs/sft_full_140364
-DATA=${WORK}/datasets/grpo_qa_list_fixed.jsonl
-IMG_ROOT=${WORK}/datasets/IAD256
+MODEL=${WORK}/models/Qwen3-VL-8B-Instruct
+SFT_CFG=${REPO}/sft_config.yaml
+OUT=${WORK}/outputs/sft_full_${SLURM_JOB_ID}
+# OUT=${WORK}/outputs/sft_full_136174
 
-# OUT=/home/foobarbaz911/VLM-R1/temp/grpo_qa_list_${SLURM_JOB_ID}
-# OUT=/work/foobarbaz911/vlmr1/outputs/sft_then_grpo_141758
-OUT=/work/foobarbaz911/vlmr1/outputs/sft_then_grpo_${SLURM_JOB_ID}
 mkdir -p \
   /home/foobarbaz911/VLM-R1/temp \
   "${OUT}" \
@@ -60,17 +57,12 @@ export TOKENIZERS_PARALLELISM=false
 export ATTN_IMPLEMENTATION=flash_attention_2
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 export CUDA_DEVICE_ORDER=PCI_BUS_ID
+export MASTER_PORT=$((16000 + (SLURM_JOB_ID % 10000)))
 
-# 先求穩
+# 如有 NCCL 問題再打開
 # export NCCL_DEBUG=INFO
-# 先不要亂關，除非真的確認 IB / P2P 有問題
 # export NCCL_IB_DISABLE=1
 # export NCCL_P2P_DISABLE=1
-
-export MASTER_PORT=$((15000 + (SLURM_JOB_ID % 10000)))
-
-# export DEBUG_MODE=true
-export LOG_PATH=/home/foobarbaz911/VLM-R1/temp/grpo_debug_${SLURM_JOB_ID}.txt
 
 ########################################
 # Sanity checks
@@ -81,8 +73,7 @@ echo "HOST: $(hostname)"
 echo "PWD: $(pwd)"
 echo "VENV: ${VENV}"
 echo "MODEL: ${MODEL}"
-echo "DATA: ${DATA}"
-echo "IMG_ROOT: ${IMG_ROOT}"
+echo "SFT_CFG: ${SFT_CFG}"
 echo "OUT: ${OUT}"
 echo "--------------------------------------"
 which python
@@ -124,43 +115,39 @@ cfg = AutoConfig.from_pretrained(
 print("model_type =", getattr(cfg, "model_type", None))
 PY
 
+echo "--------------------------------------"
+echo "sft_config.yaml:"
+cat "${SFT_CFG}"
 echo "======================================"
 
 ########################################
-# Train
+# Train: FULL SFT
 ########################################
-deepspeed --num_gpus=4 --module open_r1.grpo_jsonl \
-  --master_port ${MASTER_PORT} \
-  --dataset_name jsonl \
-  --data_file_paths "${DATA}" \
-  --image_folders "${IMG_ROOT}" \
-  --model_name_or_path "${MODEL}" \
+deepspeed --num_gpus=4 --module open_r1.sft \
+  --dataset_name "${SFT_CFG}" \
+  --image_root "" \
+  --model_name_or_path /work/foobarbaz911/vlmr1/outputs/sft_full_136174/checkpoint-1000 \
   --output_dir "${OUT}" \
   --do_train true \
   --do_eval false \
   --bf16 true \
   --tf32 true \
-  --per_device_train_batch_size 1 \
-  --gradient_accumulation_steps 8 \
-  --num_generations 4 \
-  --learning_rate 2e-6 \
-  --max_steps 1500 \
+  --torch_dtype bfloat16 \
+  --per_device_train_batch_size 8 \
+  --gradient_accumulation_steps 2 \
+  --learning_rate 1e-5 \
+  --lr_scheduler_type cosine \
+  --warmup_ratio 0.03 \
+  --max_steps 2000 \
   --logging_steps 10 \
   --save_strategy steps \
-  --save_steps 500 \
-  --save_total_limit 2 \
+  --save_steps 1000 \
+  --save_total_limit 5 \
   --eval_strategy no \
-  --reward_funcs accuracy format \
   --gradient_checkpointing \
   --attn_implementation flash_attention_2 \
   --deepspeed "${REPO}/ds_config_zero2.json" \
-  --freeze_vision_modules true \
-  --max_pixels 262144 \
-  --use_peft false \
-  # --lora_r 64 \
-  # --lora_alpha 64 \
-  # --lora_dropout 0.05 \
-  # --lora_target_modules q_proj k_proj v_proj o_proj
+  --report_to none
 
 ########################################
 # Post-run summary

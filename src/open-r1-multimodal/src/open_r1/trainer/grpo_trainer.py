@@ -501,16 +501,17 @@ class VLMGRPOTrainer(Trainer):
 
     # Get the per-token log probabilities for the completions for the model and the reference model
     def _get_per_token_logps(self, model, input_ids, attention_mask, **custom_multimodal_inputs):
-        logits = model(input_ids=input_ids, attention_mask=attention_mask, **custom_multimodal_inputs).logits  # (B, L, V)
-        logits = logits[:, :-1, :]  # (B, L-1, V), exclude the last logit: it corresponds to the next token pred
-        input_ids = input_ids[:, 1:]  # (B, L-1), exclude the first input ID since we don't have logits for it
-        # Compute the log probabilities for the input tokens. Use a loop to reduce memory peak.
-        per_token_logps = []
-        for logits_row, input_ids_row in zip(logits, input_ids):
-            log_probs = logits_row.log_softmax(dim=-1)
-            token_log_prob = torch.gather(log_probs, dim=1, index=input_ids_row.unsqueeze(1)).squeeze(1)
-            per_token_logps.append(token_log_prob)
-        return torch.stack(per_token_logps)
+        with torch.autocast(device_type="cuda", dtype=torch.bfloat16):
+            logits = model(input_ids=input_ids, attention_mask=attention_mask, **custom_multimodal_inputs).logits  # (B, L, V)
+            logits = logits[:, :-1, :]  # (B, L-1, V), exclude the last logit: it corresponds to the next token pred
+            input_ids = input_ids[:, 1:]  # (B, L-1), exclude the first input ID since we don't have logits for it
+            # Compute the log probabilities for the input tokens. Use a loop to reduce memory peak.
+            per_token_logps = []
+            for logits_row, input_ids_row in zip(logits, input_ids):
+                log_probs = logits_row.log_softmax(dim=-1)
+                token_log_prob = torch.gather(log_probs, dim=1, index=input_ids_row.unsqueeze(1)).squeeze(1)
+                per_token_logps.append(token_log_prob)
+            return torch.stack(per_token_logps)
 
 
     def _prepare_inputs(self, inputs):

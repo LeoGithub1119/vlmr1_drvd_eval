@@ -60,7 +60,7 @@ def main():
     # --- Configuration ---
     base_model_path = "/work/foobarbaz911/vlmr1/models/Qwen3-VL-8B-Instruct"
     # adapter_path = "/home/foobarbaz911/VLM-R1/temp/grpo_qa_list_133473/checkpoint-2"
-    adapter_path = "/work/foobarbaz911/vlmr1/outputs/grpo_133652/checkpoint-3320"
+    adapter_path = "/work/foobarbaz911/vlmr1/outputs/grpo_134897/checkpoint-5120"
     image_root = "/work/foobarbaz911/vlmr1/datasets/IAD256"
 
     # --- Pick two images for testing ---

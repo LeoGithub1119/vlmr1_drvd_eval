@@ -3,9 +3,9 @@
 #SBATCH -p normal
 #SBATCH --gres=gpu:4
 #SBATCH --cpus-per-task=24
-#SBATCH -t 48:00:00
-#SBATCH -o /home/foobarbaz911/VLM-R1/temp/sft_then_grpo_%j.out
-#SBATCH -e /home/foobarbaz911/VLM-R1/temp/sft_then_grpo_%j.err
+#SBATCH -t 24:00:00
+#SBATCH -o /home/foobarbaz911/VLM-R1/temp/grpo_qa_list_%j.out
+#SBATCH -e /home/foobarbaz911/VLM-R1/temp/grpo_qa_list_%j.err
 #SBATCH --account=mst114553
 
 set -euo pipefail
@@ -15,14 +15,12 @@ REPO=/home/foobarbaz911/VLM-R1
 PKG_ROOT=/home/foobarbaz911/VLM-R1/src/open-r1-multimodal
 VENV=${PKG_ROOT}/.venv310_cu124
 
-# MODEL=${WORK}/models/Qwen3-VL-8B-Instruct
-MODEL=${WORK}/outputs/sft_full_140364
+MODEL=${WORK}/models/Qwen3-VL-8B-Instruct
 DATA=${WORK}/datasets/grpo_qa_list_fixed.jsonl
 IMG_ROOT=${WORK}/datasets/IAD256
 
 # OUT=/home/foobarbaz911/VLM-R1/temp/grpo_qa_list_${SLURM_JOB_ID}
-# OUT=/work/foobarbaz911/vlmr1/outputs/sft_then_grpo_141758
-OUT=/work/foobarbaz911/vlmr1/outputs/sft_then_grpo_${SLURM_JOB_ID}
+OUT=/work/foobarbaz911/vlmr1/outputs/grpo_${SLURM_JOB_ID}
 mkdir -p \
   /home/foobarbaz911/VLM-R1/temp \
   "${OUT}" \
@@ -130,7 +128,6 @@ echo "======================================"
 # Train
 ########################################
 deepspeed --num_gpus=4 --module open_r1.grpo_jsonl \
-  --master_port ${MASTER_PORT} \
   --dataset_name jsonl \
   --data_file_paths "${DATA}" \
   --image_folders "${IMG_ROOT}" \
@@ -140,15 +137,15 @@ deepspeed --num_gpus=4 --module open_r1.grpo_jsonl \
   --do_eval false \
   --bf16 true \
   --tf32 true \
-  --per_device_train_batch_size 1 \
-  --gradient_accumulation_steps 8 \
+  --per_device_train_batch_size 2 \
+  --gradient_accumulation_steps 2 \
   --num_generations 4 \
   --learning_rate 2e-6 \
-  --max_steps 1500 \
+  --max_steps 10120 \
   --logging_steps 10 \
   --save_strategy steps \
-  --save_steps 500 \
-  --save_total_limit 2 \
+  --save_steps 200 \
+  --save_total_limit 10 \
   --eval_strategy no \
   --reward_funcs accuracy format \
   --gradient_checkpointing \
@@ -156,11 +153,11 @@ deepspeed --num_gpus=4 --module open_r1.grpo_jsonl \
   --deepspeed "${REPO}/ds_config_zero2.json" \
   --freeze_vision_modules true \
   --max_pixels 262144 \
-  --use_peft false \
-  # --lora_r 64 \
-  # --lora_alpha 64 \
-  # --lora_dropout 0.05 \
-  # --lora_target_modules q_proj k_proj v_proj o_proj
+  --use_peft true \
+  --lora_r 64 \
+  --lora_alpha 64 \
+  --lora_dropout 0.05 \
+  --lora_target_modules q_proj k_proj v_proj o_proj
 
 ########################################
 # Post-run summary

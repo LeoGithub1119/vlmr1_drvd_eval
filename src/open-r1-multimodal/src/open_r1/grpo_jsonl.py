@@ -75,6 +75,8 @@ class GRPOScriptArguments(ScriptArguments):
     Script arguments for the GRPO training script.
     """
 
+    master_port: Optional[int] = field(default=None, metadata={"help": "master port for deepspeed"})
+
     data_file_paths: str = field(
         default=None,
         metadata={"help": "Paths to data files, separated by ':'"},
@@ -798,7 +800,7 @@ def format_reward(completions, **kwargs):
     """Reward function that checks if the completion has a specific format."""
     pattern = r"<think>.*?</think>\s*<answer>.*?</answer>"
     completion_contents = [completion[0]["content"] for completion in completions]
-    matches = [re.fullmatch(pattern, content, re.DOTALL) for content in completion_contents]
+    matches = [re.search(pattern, content, re.DOTALL) for content in completion_contents]
 
     current_time = datetime.now().strftime("%d-%H-%M-%S-%f")
     if os.getenv("DEBUG_MODE") == "true":
@@ -834,16 +836,20 @@ SYSTEM_PROMPT = (
 
 
 def get_vlm_module(model_name_or_path):
-    if "qwen3" in model_name_or_path.lower():
+    from transformers import AutoConfig
+    cfg = AutoConfig.from_pretrained(model_name_or_path, trust_remote_code=True)
+    model_type = getattr(cfg, "model_type", None)
+
+    if model_type == "qwen3_vl" or "qwen3" in model_name_or_path.lower():
         return Qwen3VLModule
-    elif "qwen" in model_name_or_path.lower():
+    elif model_type in ["qwen2_vl", "qwen2_5_vl"] or "qwen" in model_name_or_path.lower():
         return Qwen2VLModule
-    elif "internvl" in model_name_or_path.lower():
+    elif model_type == "internvl_chat" or "internvl" in model_name_or_path.lower():
         return InvernVLModule
-    elif "glm" in model_name_or_path.lower():
+    elif model_type == "chatglm" or "glm" in model_name_or_path.lower():
         return GLMVModule
     else:
-        raise ValueError(f"Unsupported model: {model_name_or_path}")
+        raise ValueError(f"Unsupported model: {model_name_or_path} with type {model_type}")
 
 
 def main(script_args, training_args, model_args):
