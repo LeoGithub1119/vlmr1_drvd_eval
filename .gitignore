@@ -193,3 +193,6 @@ src/open-r1-multimodal/src/open_r1/grpo_jsonl_ocr.pysrc/eval/logs/
 out_err/
 
 temp/
+out_err_0222/
+fix_0223/
+ckpt_test_grpo/
